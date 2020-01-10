@@ -13,16 +13,19 @@
 using namespace std;
 
 class Point;
+
 class Edge 
 {
 public:
-	Edge(Point* a, Point* b) {
+	Edge(Point* a, Point* b) 
+	{
 		VertexA = a;
 		VertexB = b;
 	};
 	Point* VertexA;
 	Point* VertexB;
 };
+
 class Point 
 {
 public:
@@ -57,9 +60,17 @@ public:
 			return true;
 		}
 		return false;
-
 	}
 };
+
+float Euclidean_distance(Point *P, Point *N)
+{
+	return sqrt(pow(abs(N->x - P->x), 2) + pow(abs(N->y - P->y), 2));
+}
+float Euclidean_distance(Point P, Point N)
+{
+	return sqrt(pow(abs(N.x - P.x), 2) + pow(abs(N.y - P.y), 2));
+}
 
 vector<Point> Puntos;
 int numberPointsT = 0;
@@ -78,17 +89,12 @@ void drawPoints()
 {
 	for (size_t i = 0; i < numberPointsT; i++)
 	{
-		glPointSize(5.0);
+		glPointSize(3.5);
 		glBegin(GL_POINTS);
 		glColor3d(250, 0, 0);
 		glVertex3f(Puntos[i].x, Puntos[i].y, 0.0);
 		glEnd();
 	}
-}
-
-float Euclidean_distance(Point deltaX, Point deltaY)
-{
-	return sqrt(pow((deltaX.x-deltaY.x),2) + pow((deltaX.y - deltaY.y), 2));
 }
 
 vector<Edge*> EdgesGlob;
@@ -102,10 +108,9 @@ void getEdgesKNN()
 		{
 			for (size_t j = 0; j < Puntos.size(); j++)
 			{
-				float ED = Euclidean_distance(Puntos[i], Puntos[j]);
+				float ED = Euclidean_distance(&Puntos[i], &Puntos[j]);
 				if (ED < minDist && ED != 0 && Puntos[i].Edges.size() < 5 && Puntos[j].Edges.size() < 5)
 				{
-					bool exist = false;
 
 					Edge* nuevo1 = new Edge(&Puntos[i], &Puntos[j]);
 					Edge* nuevo2 = new Edge(&Puntos[j], &Puntos[i]);
@@ -137,20 +142,63 @@ void drawEDGES()
 	}
 }
 
+float printPath(vector<Point*> Path, Point *A, Point *B)
+{
+	float answ = 0;
+	for (size_t i = 0; i < Path.size(); i++)
+	{
+		if (i+1 != Path.size())
+		{
+			glBegin(GL_LINES);
+			glColor3d(1.00000f, 0.20000f, 0.80000f);
+			glVertex3d(Path[i]->x, Path[i]->y, 0);
+			glVertex3d(Path[i + 1]->x, Path[i + 1]->y, 0);
+			glEnd();
+			answ = answ + Euclidean_distance(Path[i],Path[i+1]);
+		}
+	}
+	cout << "Distancia Recorrida: " << answ << endl;
+	return answ;
+}
+
+void drawPointsFromPath(vector<Point*> Path, Point* A, Point* B)
+{
+	glPointSize(5.0);
+	glBegin(GL_POINTS);
+	glColor3d(0.000, 0.980, 0.604);
+	glVertex3f(A->x, A->y, 0.0);
+	glEnd();
+	for (size_t i = 0; i < Path.size(); i++)
+	{
+		glPointSize(5.0);
+		glBegin(GL_POINTS);
+		glColor3d(0.000, 0.980, 0.604);
+		glVertex3f(Path[i]->x, Path[i]->y, 0.0);
+		glEnd();
+	}
+	glPointSize(5.0);
+	glBegin(GL_POINTS);
+	glColor3d(0.000, 0.980, 0.604);
+	glVertex3f(B->x, B->y, 0.0);
+	glEnd();
+}
+
 class BusquedaCiegaP 
 {
 public:
-	BusquedaCiegaP();
+	stack<Point*>_Stack;
+	vector<Point*> Path;
+	BusquedaCiegaP() {}
 	bool Run(Point& P, Point& N) 
 	{
-		L.push(&P);
+		_Stack.push(&P);
 		Point* V;
-		while (!L.empty()) 
+		while (!_Stack.empty())
 		{
-			V = L.top();
+			V = _Stack.top();
 			V->visited = true;
 			Path.push_back(V);
-			L.pop();
+			_Stack.pop();
 			if (*V == N) 
 			{
 				return true;
@@ -159,9 +207,10 @@ public:
 			{
 				for (unsigned int i = 0; i < V->Edges.size(); i++) 
 				{
-					if (V->Edges[i]->VertexB->visited == false && V->Edges[i]->VertexB->added == false) 
+					if (V->Edges[i]->VertexB->visited == false &&
+						V->Edges[i]->VertexB->added == false) 
 					{
-						L.push(V->Edges[i]->VertexB);
+						_Stack.push(V->Edges[i]->VertexB);
 						V->Edges[i]->VertexB->added = true;
 					}
 				}
@@ -170,57 +219,57 @@ public:
 		}
 		return false;
 	}
-	stack<Point*>L;
-	vector<Point*> Path;
 };
 
-class A_s {
-
+class AStar 
+{
 public:
-	A_s();
-
-	bool Run(Point& P, Point& N) {
+	struct compare
+	{
+		bool operator()(Point*& P, Point*& Q)
+		{
+			return P->cost > Q->cost;
+		}
+	};
+	priority_queue<Point*, vector<Point* >, compare > PQ;
+	vector<Point*> Path;
+	AStar(){}
+	bool Run(Point& P, Point& N) 
+	{
 		float G;
 		float H;
 		Point* V;
-		//P.visited = true;
-		LESS.push(&P);
-		while (!LESS.empty()) 
+		PQ.push(&P);
+		while (!PQ.empty())
 		{
-			V = LESS.top();
+			V = PQ.top();
 			V->visited = true;
 			Path.push_back(V);
-			LESS = priority_queue<Point*, vector<Point* >, compare>();
+			PQ = priority_queue<Point*, vector<Point* >, compare>();
 			if (*V == N) 
 			{
 				return true;
 			}
-			else {
-				for (unsigned int i = 0; i < V->Edges.size(); i++) {
-					if (V->Edges[i]->VertexB->visited == false) {
-						G = euclidean(*V->Edges[i]->VertexA, *V->Edges[i]->VertexB);
-						H = euclidean(*V->Edges[i]->VertexB, N);
+			else 
+			{
+				for (unsigned int i = 0; i < V->Edges.size(); i++) 
+				{
+					if (V->Edges[i]->VertexB->visited == false) 
+					{
+						G = Euclidean_distance(*V->Edges[i]->VertexA, *V->Edges[i]->VertexB);
+						H = Euclidean_distance(*V->Edges[i]->VertexB, N);
 						V->Edges[i]->VertexB->cost = G + H;
-						//V->Edges[i]->VertexB->visited = true;
-						LESS.push(V->Edges[i]->VertexB);
+						PQ.push(V->Edges[i]->VertexB);
 					}
 				}
 			}
 		}
 		return false;
 	}
-
-	float euclidean(Point, Point);
-	vector<Point*> Path;
-	struct compare 
-	{
-		bool operator()(Point*& P, Point*& Q) 
-		{
-			return P->cost > Q->cost;
-		}
-	};
-	priority_queue<Point*, vector<Point* >, compare > LESS;
 };
+
+BusquedaCiegaP IA1;
+AStar IA2;
 
 void displayGizmo()
 {
@@ -237,6 +286,9 @@ void displayGizmo()
 	glEnd();
 }
 
+Point* p1;
+Point* p2;
+
 //funcion llamada a cada imagen
 void glPaint(void) {
 
@@ -246,6 +298,17 @@ void glPaint(void) {
 
 	drawEDGES();
 	drawPoints();
+	printPath(IA1.Path, p1, p2);
+	//printPath(IA2.Path, p1, p2);
+	drawPointsFromPath(IA1.Path, p1, p2);
+	//drawPointsFromPath(IA2.Path, p1, p2);
+
+	glPointSize(8.0);
+	glBegin(GL_POINTS);
+	glColor3d(1.000, 0.894, 0.882);
+	glVertex3f(p1->x, p1->y, 0.0);
+	glVertex3f(p2->x, p2->y, 0.0);
+	glEnd();
 
 	//dibuja el gizmo
 	displayGizmo();
@@ -291,17 +354,58 @@ GLvoid window_key(unsigned char key, int x, int y) {
 //
 //el programa principal
 //
+
+int getFar_Right_bot(vector<Point> Puntes)
+{
+	int pos = 0;
+	float x_max = Puntes[0].x;
+	float y_max = Puntes[0].y;
+	for (size_t i = 0; i < Puntes.size(); i++)
+	{
+		if (Puntes[i].x > x_max && Puntes[i].y < y_max)
+		{
+			x_max = Puntes[i].x;
+			y_max = Puntes[i].y;
+			pos = i;
+		}
+	}
+	return pos;
+}
+
+int getFar_Left_top(vector<Point> Puntes)
+{
+	int pos = 0;
+	float x_max = Puntes[0].x;
+	float y_max = Puntes[0].y;
+	for (size_t i = 0; i < Puntes.size(); i++)
+	{
+		if (Puntes[i].x < x_max&& Puntes[i].y > y_max)
+		{
+			x_max = Puntes[i].x;
+			y_max = Puntes[i].y;
+			pos = i;
+		}
+	}
+	return pos;
+}
+
 int main(int argc, char** argv) {
 	numberPointsT = 200;
 	createPoints();
 	getEdgesKNN();
+	
+	p1 = &Puntos[getFar_Left_top(Puntos)];
+	p2 = &Puntos[getFar_Right_bot(Puntos)];
+
+	IA1.Run(*p1, *p2);
+	//IA2.Run(*p1, *p2);
 
 	//Inicializacion de la GLUT
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(800, 800); //tamaño de la ventana
 	glutInitWindowPosition(0, 0); //posicion de la ventana
-	glutCreateWindow("YY EY"); //titulo de la ventana
+	glutCreateWindow("SKYNET"); //titulo de la ventana
 
 	init_GL(); //funcion de inicializacion de OpenGL
 
