@@ -137,6 +137,91 @@ void drawEDGES()
 	}
 }
 
+class BusquedaCiegaP 
+{
+public:
+	BusquedaCiegaP();
+	bool Run(Point& P, Point& N) 
+	{
+		L.push(&P);
+		Point* V;
+		while (!L.empty()) 
+		{
+			V = L.top();
+			V->visited = true;
+			Path.push_back(V);
+			L.pop();
+			if (*V == N) 
+			{
+				return true;
+			}
+			else 
+			{
+				for (unsigned int i = 0; i < V->Edges.size(); i++) 
+				{
+					if (V->Edges[i]->VertexB->visited == false && V->Edges[i]->VertexB->added == false) 
+					{
+						L.push(V->Edges[i]->VertexB);
+						V->Edges[i]->VertexB->added = true;
+					}
+				}
+
+			}
+		}
+		return false;
+	}
+	stack<Point*>L;
+	vector<Point*> Path;
+};
+
+class A_s {
+
+public:
+	A_s();
+
+	bool Run(Point& P, Point& N) {
+		float G;
+		float H;
+		Point* V;
+		//P.visited = true;
+		LESS.push(&P);
+		while (!LESS.empty()) 
+		{
+			V = LESS.top();
+			V->visited = true;
+			Path.push_back(V);
+			LESS = priority_queue<Point*, vector<Point* >, compare>();
+			if (*V == N) 
+			{
+				return true;
+			}
+			else {
+				for (unsigned int i = 0; i < V->Edges.size(); i++) {
+					if (V->Edges[i]->VertexB->visited == false) {
+						G = euclidean(*V->Edges[i]->VertexA, *V->Edges[i]->VertexB);
+						H = euclidean(*V->Edges[i]->VertexB, N);
+						V->Edges[i]->VertexB->cost = G + H;
+						//V->Edges[i]->VertexB->visited = true;
+						LESS.push(V->Edges[i]->VertexB);
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	float euclidean(Point, Point);
+	vector<Point*> Path;
+	struct compare 
+	{
+		bool operator()(Point*& P, Point*& Q) 
+		{
+			return P->cost > Q->cost;
+		}
+	};
+	priority_queue<Point*, vector<Point* >, compare > LESS;
+};
+
 void displayGizmo()
 {
 	glBegin(GL_LINES);
