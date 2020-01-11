@@ -21,11 +21,15 @@ public:
 	vector<char>internalBoard;
 	bool isMax = false;
 	bool isMin = false;
+	//bool root = false;
 	int deep;
 	int RValue;
 	MiniMax(){}
 
+	int evaluate()
+	{
 
+	}
 };
 
 
