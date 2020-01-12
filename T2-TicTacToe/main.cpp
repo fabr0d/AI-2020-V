@@ -15,21 +15,164 @@ using namespace std;
 
 vector<char> board;
 
+bool isValidMove(int pos, vector<int> board) //check in board if can move in a empty box
+{
+	if (board[pos] != 1 and board[pos] != 2)
+	{
+		return true;
+	}
+	return false;
+}
+
 class MiniMax
 {
 public:
 	vector<char>internalBoard;
+	vector<char>temporalBoard;
 	bool isMax = false;
 	bool isMin = false;
-	//bool root = false;
-	int deep;
-	int RValue;
-	MiniMax(){}
-
-	int evaluate()
+	bool root = false;
+	int deep;// Profundidad actual
+	int RValue;// Valor del Nodo
+	char CoinValue; //Valor de la Ficha, A = square / B = circle
+	vector <MiniMax*> sons;
+	MiniMax(int _deep, bool _root, bool _isMin, bool _isMax, vector<char> boardsTest, char _CoinValue)
 	{
+		isMax = _isMax;
+		isMin = _isMin;
+		deep = _deep;
+		CoinValue = _CoinValue;
+		if (_root == true)
+		{
+			internalBoard = board; //contiene el tablero global
+			temporalBoard = board; //aca se probaran los nuevos tableros
+			
+			if (sons.size() < 1) // caso que ya no haigan mas hijos
+			{
+				RValue = -9999;
+			}
+			
+		}
+		else
+		{
 
+		}
 	}
+
+	int evaluate() // usa internalBoard
+	{
+		int Positive = 0;
+		int Negative = 0;
+		char aux = CoinValue;
+		if ((internalBoard[2] == CoinValue or internalBoard[2] == 'C') and 
+			(internalBoard[4] == CoinValue or internalBoard[4] == 'C') and
+			(internalBoard[6] == CoinValue or internalBoard[6] == 'C'))
+		{
+			Positive++;
+		}
+		else if (((internalBoard[2] != CoinValue and internalBoard[2] != 'C') or internalBoard[2] == 'C') and
+			((internalBoard[4] != CoinValue and internalBoard[4] != 'C') or internalBoard[4] == 'C') and
+			((internalBoard[6] != CoinValue and internalBoard[6] != 'C') or internalBoard[6] == 'C'))
+		{
+			Negative++;
+		}
+
+		if ((internalBoard[0] == CoinValue or internalBoard[0] == 'C') and
+			(internalBoard[4] == CoinValue or internalBoard[4] == 'C') and
+			(internalBoard[8] == CoinValue or internalBoard[8] == 'C'))
+		{
+			Positive++;
+		}
+		else if (((internalBoard[0] != CoinValue and internalBoard[0] != 'C') or internalBoard[0] == 'C') and
+			((internalBoard[4] != CoinValue and internalBoard[4] != 'C') or internalBoard[4] == 'C') and
+			((internalBoard[8] != CoinValue and internalBoard[8] != 'C') or internalBoard[8] == 'C'))
+		{
+			Negative++;
+		}
+
+		if ((internalBoard[0] == CoinValue or internalBoard[0] == 'C') and
+			(internalBoard[1] == CoinValue or internalBoard[1] == 'C') and
+			(internalBoard[2] == CoinValue or internalBoard[2] == 'C'))
+		{
+			Positive++;
+		}
+		else if (((internalBoard[0] != CoinValue and internalBoard[0] != 'C') or internalBoard[0] == 'C') and
+			((internalBoard[1] != CoinValue and internalBoard[1] != 'C') or internalBoard[1] == 'C') and
+			((internalBoard[2] != CoinValue and internalBoard[2] != 'C') or internalBoard[2] == 'C'))
+		{
+			Negative++;
+		}
+
+		if ((internalBoard[3] == CoinValue or internalBoard[3] == 'C') and
+			(internalBoard[4] == CoinValue or internalBoard[4] == 'C') and
+			(internalBoard[5] == CoinValue or internalBoard[5] == 'C'))
+		{
+			Positive++;
+		}
+		else if (((internalBoard[3] != CoinValue and internalBoard[3] != 'C') or internalBoard[3] == 'C') and
+			((internalBoard[4] != CoinValue and internalBoard[4] != 'C') or internalBoard[4] == 'C') and
+			((internalBoard[5] != CoinValue and internalBoard[5] != 'C') or internalBoard[5] == 'C'))
+		{
+			Negative++;
+		}
+
+		if ((internalBoard[6] == CoinValue or internalBoard[6] == 'C') and
+			(internalBoard[7] == CoinValue or internalBoard[7] == 'C') and
+			(internalBoard[8] == CoinValue or internalBoard[8] == 'C'))
+		{
+			Positive++;
+		}
+		else if (((internalBoard[6] != CoinValue and internalBoard[6] != 'C') or internalBoard[6] == 'C') and
+			((internalBoard[7] != CoinValue and internalBoard[7] != 'C') or internalBoard[7] == 'C') and
+			((internalBoard[8] != CoinValue and internalBoard[8] != 'C') or internalBoard[8] == 'C'))
+		{
+			Negative++;
+		}
+
+		if ((internalBoard[0] == CoinValue or internalBoard[0] == 'C') and
+			(internalBoard[3] == CoinValue or internalBoard[3] == 'C') and
+			(internalBoard[6] == CoinValue or internalBoard[6] == 'C'))
+		{
+			Positive++;
+		}
+		else if (((internalBoard[0] != CoinValue and internalBoard[0] != 'C') or internalBoard[0] == 'C') and
+			((internalBoard[3] != CoinValue and internalBoard[3] != 'C') or internalBoard[3] == 'C') and
+			((internalBoard[6] != CoinValue and internalBoard[6] != 'C') or internalBoard[6] == 'C'))
+		{
+			Negative++;
+		}
+
+		if ((internalBoard[1] == CoinValue or internalBoard[1] == 'C') and
+			(internalBoard[4] == CoinValue or internalBoard[4] == 'C') and
+			(internalBoard[7] == CoinValue or internalBoard[7] == 'C'))
+		{
+			Positive++;
+		}
+		else if (((internalBoard[1] != CoinValue and internalBoard[1] != 'C') or internalBoard[1] == 'C') and
+			((internalBoard[4] != CoinValue and internalBoard[4] != 'C') or internalBoard[4] == 'C') and
+			((internalBoard[7] != CoinValue and internalBoard[7] != 'C') or internalBoard[7] == 'C'))
+		{
+			Negative++;
+		}
+
+		if ((internalBoard[2] == CoinValue or internalBoard[2] == 'C') and
+			(internalBoard[5] == CoinValue or internalBoard[5] == 'C') and
+			(internalBoard[8] == CoinValue or internalBoard[8] == 'C'))
+		{
+			Positive++;
+		}
+		else if (((internalBoard[2] != CoinValue and internalBoard[2] != 'C') or internalBoard[2] == 'C') and
+			((internalBoard[5] != CoinValue and internalBoard[5] != 'C') or internalBoard[5] == 'C') and
+			((internalBoard[8] != CoinValue and internalBoard[8] != 'C') or internalBoard[8] == 'C'))
+		{
+			Negative++;
+		}
+
+		return Positive-Negative;
+	}
+
+
+
 };
 
 

@@ -135,7 +135,7 @@ void drawEDGES()
 	for (size_t i = 0; i < EdgesGlob.size(); i++)
 	{
 		glBegin(GL_LINES);
-		glColor3d(0.20000f, 0.80000f, 1.00000f);
+		glColor3d(0, 1, 0);
 		glVertex3d(EdgesGlob[i]->VertexA->x, EdgesGlob[i]->VertexA->y, 0);
 		glVertex3d(EdgesGlob[i]->VertexB->x, EdgesGlob[i]->VertexB->y, 0);
 		glEnd();
@@ -231,35 +231,34 @@ public:
 			return P->cost > Q->cost;
 		}
 	};
-	priority_queue<Point*, vector<Point* >, compare > PQ;
+	priority_queue<Point*, vector<Point* >, compare > PrioQu;
 	vector<Point*> Path;
 	AStar(){}
-	bool Run(Point& P, Point& N) 
+	bool Run(Point& StartPoint, Point& FinalPoint) 
 	{
-		float G;
-		float H;
-		Point* V;
-		PQ.push(&P);
-		while (!PQ.empty())
+		float G, H;
+		Point* WorkPoint;
+		PrioQu.push(&StartPoint);
+		while (!PrioQu.empty())
 		{
-			V = PQ.top();
-			V->visited = true;
-			Path.push_back(V);
-			PQ = priority_queue<Point*, vector<Point* >, compare>();
-			if (*V == N) 
+			WorkPoint = PrioQu.top();
+			WorkPoint->visited = true;
+			Path.push_back(WorkPoint);
+			PrioQu = priority_queue<Point*, vector<Point* >, compare>();
+			if (*WorkPoint == FinalPoint)
 			{
 				return true;
 			}
 			else 
 			{
-				for (unsigned int i = 0; i < V->Edges.size(); i++) 
+				for (unsigned int i = 0; i < WorkPoint->Edges.size(); i++)
 				{
-					if (V->Edges[i]->VertexB->visited == false) 
+					if (WorkPoint->Edges[i]->VertexB->visited == false)
 					{
-						G = Euclidean_distance(*V->Edges[i]->VertexA, *V->Edges[i]->VertexB);
-						H = Euclidean_distance(*V->Edges[i]->VertexB, N);
-						V->Edges[i]->VertexB->cost = G + H;
-						PQ.push(V->Edges[i]->VertexB);
+						G = Euclidean_distance(*WorkPoint->Edges[i]->VertexA, *WorkPoint->Edges[i]->VertexB);
+						H = Euclidean_distance(*WorkPoint->Edges[i]->VertexB, FinalPoint);
+						WorkPoint->Edges[i]->VertexB->cost = G + H;
+						PrioQu.push(WorkPoint->Edges[i]->VertexB);
 					}
 				}
 			}
@@ -298,10 +297,10 @@ void glPaint(void) {
 
 	drawEDGES();
 	drawPoints();
-	printPath(IA1.Path, p1, p2);
-	//printPath(IA2.Path, p1, p2);
-	drawPointsFromPath(IA1.Path, p1, p2);
-	//drawPointsFromPath(IA2.Path, p1, p2);
+	//printPath(IA1.Path, p1, p2);
+	printPath(IA2.Path, p1, p2);
+	//drawPointsFromPath(IA1.Path, p1, p2);
+	drawPointsFromPath(IA2.Path, p1, p2);
 
 	glPointSize(8.0);
 	glBegin(GL_POINTS);
@@ -397,8 +396,8 @@ int main(int argc, char** argv) {
 	p1 = &Puntos[getFar_Left_top(Puntos)];
 	p2 = &Puntos[getFar_Right_bot(Puntos)];
 
-	IA1.Run(*p1, *p2);
-	//IA2.Run(*p1, *p2);
+	//IA1.Run(*p1, *p2);
+	IA2.Run(*p1, *p2);
 
 	//Inicializacion de la GLUT
 	glutInit(&argc, argv);
