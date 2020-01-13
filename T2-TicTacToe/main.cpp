@@ -9,17 +9,65 @@
 #include <queue>
 #include <stack>
 #include <math.h>
+#include <algorithm>
+#include <stdlib.h>
+#include <cmath>
 #define KEY_ESC 27
+#define POS0 48
+#define POS1 49
+#define POS2 50
+#define POS3 51
+#define POS4 52
+#define POS5 53
+#define POS6 54
+#define POS7 55
+#define POS8 56
+#define AIMOVE 65
 
 using namespace std;
 
+template <typename T, size_t N> const T* mybegin(const T(&a)[N]) { return a; }
+template <typename T, size_t N> const T* myend(const T(&a)[N]) { return a + N; }
+
 vector<char> board;
 
-bool isValidMove(int pos, vector<int> board) //check in board if can move in a empty box
+void OnMouseClick(int button, int state, int x, int y)
 {
-	if (board[pos] != 1 and board[pos] != 2)
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		cout << "x: "<< x << endl;
+		cout << "y: "<< y << endl;
+	}
+	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
+		
+	}
+	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP) {
+		
+	}
+}
+
+void OnMouseMotion(int x, int y)
+{
+	
+}
+
+bool isValidMove(int pos, vector<char> boardT) //check in board if can move in a empty box
+{
+	if (boardT[pos] == 'C')
 	{
 		return true;
+	}
+	return false;
+}
+
+bool isPossibleMove(vector<char> boardw)
+{
+	for (size_t i = 0; i < boardw.size(); i++)
+	{
+		if (boardw[i] == 'C')
+		{
+			return true;
+		}
 	}
 	return false;
 }
@@ -28,151 +76,145 @@ class MiniMax
 {
 public:
 	vector<char>internalBoard;
-	vector<char>temporalBoard;
 	bool isMax = false;
-	bool isMin = false;
-	bool root = false;
 	int deep;// Profundidad actual
-	int RValue;// Valor del Nodo
-	char CoinValue; //Valor de la Ficha, A = square / B = circle
+	int RValue;// Valor que resulta de evaluar
+	char Player; //Valor de jugador que le toca en ese nodo
+	int MinimaxVal;
 	vector <MiniMax*> sons;
-	MiniMax(int _deep, bool _root, bool _isMin, bool _isMax, vector<char> boardsTest, char _CoinValue)
+
+	MiniMax(int _deep,  bool _isMax, vector<char> Iboard, char _Player)
 	{
 		isMax = _isMax;
-		isMin = _isMin;
 		deep = _deep;
-		CoinValue = _CoinValue;
-		if (_root == true)
+		Player = _Player;
+		internalBoard = Iboard;
+		RValue = evaluate();
+		if (deep - 1 > 0 and isPossibleMove(internalBoard) == true)
 		{
-			internalBoard = board; //contiene el tablero global
-			temporalBoard = board; //aca se probaran los nuevos tableros
-			
-			if (sons.size() < 1) // caso que ya no haigan mas hijos
+			for (size_t i = 0; i < 9; i++)
 			{
-				RValue = -9999;
+				if (isValidMove(i, internalBoard) == true);
+				{
+					vector<char>Tboard0 = internalBoard;
+					Tboard0[0] = Player;
+					char AuxChar = 'C';
+					if (Player == 'A') { AuxChar = 'B'; }
+					else { AuxChar = 'A'; }
+					MiniMax* NewSon = new MiniMax(deep - 1, !isMax, Tboard0, AuxChar);
+					sons.push_back(NewSon);
+				}
 			}
-			
-		}
-		else
-		{
-
 		}
 	}
 
-	int evaluate() // usa internalBoard
+	int evaluate() // usa internalBoard, ve lo mas favorable para la IA
 	{
+		//A = square <--- EL HUMANO
+		//B = circle <--- LA IA
 		int Positive = 0;
 		int Negative = 0;
-		char aux = CoinValue;
-		if ((internalBoard[2] == CoinValue or internalBoard[2] == 'C') and 
-			(internalBoard[4] == CoinValue or internalBoard[4] == 'C') and
-			(internalBoard[6] == CoinValue or internalBoard[6] == 'C'))
+		if ((internalBoard[2] == 'B' or internalBoard[2] == 'C') and (internalBoard[4] == 'B' or internalBoard[4] == 'C') and (internalBoard[6] == 'B' or internalBoard[6] == 'C'))
 		{
 			Positive++;
 		}
-		else if (((internalBoard[2] != CoinValue and internalBoard[2] != 'C') or internalBoard[2] == 'C') and
-			((internalBoard[4] != CoinValue and internalBoard[4] != 'C') or internalBoard[4] == 'C') and
-			((internalBoard[6] != CoinValue and internalBoard[6] != 'C') or internalBoard[6] == 'C'))
+		else if ((internalBoard[2] != 'A' or internalBoard[2] == 'C') and (internalBoard[4] != 'A' or internalBoard[4] == 'C') and (internalBoard[6] != 'A' or internalBoard[6] == 'C'))
 		{
 			Negative++;
 		}
 
-		if ((internalBoard[0] == CoinValue or internalBoard[0] == 'C') and
-			(internalBoard[4] == CoinValue or internalBoard[4] == 'C') and
-			(internalBoard[8] == CoinValue or internalBoard[8] == 'C'))
+		if ((internalBoard[0] == 'B' or internalBoard[0] == 'C') and (internalBoard[4] == 'B' or internalBoard[4] == 'C') and (internalBoard[8] == 'B' or internalBoard[8] == 'C'))
 		{
 			Positive++;
 		}
-		else if (((internalBoard[0] != CoinValue and internalBoard[0] != 'C') or internalBoard[0] == 'C') and
-			((internalBoard[4] != CoinValue and internalBoard[4] != 'C') or internalBoard[4] == 'C') and
-			((internalBoard[8] != CoinValue and internalBoard[8] != 'C') or internalBoard[8] == 'C'))
+		else if ((internalBoard[0] != 'A' or internalBoard[0] == 'C') and (internalBoard[4] != 'A' or internalBoard[4] == 'C') and (internalBoard[8] != 'A' or internalBoard[8] == 'C'))
 		{
 			Negative++;
 		}
 
-		if ((internalBoard[0] == CoinValue or internalBoard[0] == 'C') and
-			(internalBoard[1] == CoinValue or internalBoard[1] == 'C') and
-			(internalBoard[2] == CoinValue or internalBoard[2] == 'C'))
+		if ((internalBoard[0] == 'B' or internalBoard[0] == 'C') and (internalBoard[1] == 'B' or internalBoard[1] == 'C') and (internalBoard[2] == 'B' or internalBoard[2] == 'C'))
 		{
 			Positive++;
 		}
-		else if (((internalBoard[0] != CoinValue and internalBoard[0] != 'C') or internalBoard[0] == 'C') and
-			((internalBoard[1] != CoinValue and internalBoard[1] != 'C') or internalBoard[1] == 'C') and
-			((internalBoard[2] != CoinValue and internalBoard[2] != 'C') or internalBoard[2] == 'C'))
+		else if ((internalBoard[0] != 'A' or internalBoard[0] == 'C') and (internalBoard[1] != 'A' or internalBoard[1] == 'C') and (internalBoard[2] != 'A' or internalBoard[2] == 'C'))
 		{
 			Negative++;
 		}
 
-		if ((internalBoard[3] == CoinValue or internalBoard[3] == 'C') and
-			(internalBoard[4] == CoinValue or internalBoard[4] == 'C') and
-			(internalBoard[5] == CoinValue or internalBoard[5] == 'C'))
+		if ((internalBoard[3] == 'B' or internalBoard[3] == 'C') and (internalBoard[4] == 'B' or internalBoard[4] == 'C') and (internalBoard[5] == 'B' or internalBoard[5] == 'C'))
 		{
 			Positive++;
 		}
-		else if (((internalBoard[3] != CoinValue and internalBoard[3] != 'C') or internalBoard[3] == 'C') and
-			((internalBoard[4] != CoinValue and internalBoard[4] != 'C') or internalBoard[4] == 'C') and
-			((internalBoard[5] != CoinValue and internalBoard[5] != 'C') or internalBoard[5] == 'C'))
+		else if ((internalBoard[3] != 'A' or internalBoard[3] == 'C') and (internalBoard[4] != 'A' or internalBoard[4] == 'C') and (internalBoard[5] != 'A' or internalBoard[5] == 'C'))
 		{
 			Negative++;
 		}
 
-		if ((internalBoard[6] == CoinValue or internalBoard[6] == 'C') and
-			(internalBoard[7] == CoinValue or internalBoard[7] == 'C') and
-			(internalBoard[8] == CoinValue or internalBoard[8] == 'C'))
+		if ((internalBoard[6] == 'B' or internalBoard[6] == 'C') and (internalBoard[7] == 'B' or internalBoard[7] == 'C') and (internalBoard[8] == 'B' or internalBoard[8] == 'C'))
 		{
 			Positive++;
 		}
-		else if (((internalBoard[6] != CoinValue and internalBoard[6] != 'C') or internalBoard[6] == 'C') and
-			((internalBoard[7] != CoinValue and internalBoard[7] != 'C') or internalBoard[7] == 'C') and
-			((internalBoard[8] != CoinValue and internalBoard[8] != 'C') or internalBoard[8] == 'C'))
+		else if ((internalBoard[6] != 'A' or internalBoard[6] == 'C') and (internalBoard[7] != 'A' or internalBoard[7] == 'C') and (internalBoard[8] != 'A' or internalBoard[8] == 'C'))
 		{
 			Negative++;
 		}
 
-		if ((internalBoard[0] == CoinValue or internalBoard[0] == 'C') and
-			(internalBoard[3] == CoinValue or internalBoard[3] == 'C') and
-			(internalBoard[6] == CoinValue or internalBoard[6] == 'C'))
+		if ((internalBoard[0] == 'B' or internalBoard[0] == 'C') and (internalBoard[3] == 'B' or internalBoard[3] == 'C') and (internalBoard[6] == 'B' or internalBoard[6] == 'C'))
 		{
 			Positive++;
 		}
-		else if (((internalBoard[0] != CoinValue and internalBoard[0] != 'C') or internalBoard[0] == 'C') and
-			((internalBoard[3] != CoinValue and internalBoard[3] != 'C') or internalBoard[3] == 'C') and
-			((internalBoard[6] != CoinValue and internalBoard[6] != 'C') or internalBoard[6] == 'C'))
+		else if ((internalBoard[0] != 'A' or internalBoard[0] == 'C') and (internalBoard[3] != 'A' or internalBoard[3] == 'C') and (internalBoard[6] != 'A' or internalBoard[6] == 'C'))
 		{
 			Negative++;
 		}
 
-		if ((internalBoard[1] == CoinValue or internalBoard[1] == 'C') and
-			(internalBoard[4] == CoinValue or internalBoard[4] == 'C') and
-			(internalBoard[7] == CoinValue or internalBoard[7] == 'C'))
+		if ((internalBoard[1] == 'B' or internalBoard[1] == 'C') and (internalBoard[4] == 'B' or internalBoard[4] == 'C') and (internalBoard[7] == 'B' or internalBoard[7] == 'C'))
 		{
 			Positive++;
 		}
-		else if (((internalBoard[1] != CoinValue and internalBoard[1] != 'C') or internalBoard[1] == 'C') and
-			((internalBoard[4] != CoinValue and internalBoard[4] != 'C') or internalBoard[4] == 'C') and
-			((internalBoard[7] != CoinValue and internalBoard[7] != 'C') or internalBoard[7] == 'C'))
+		else if ((internalBoard[1] != 'A' or internalBoard[1] == 'C') and (internalBoard[4] != 'A' or internalBoard[4] == 'C') and (internalBoard[7] != 'A' or internalBoard[7] == 'C'))
 		{
 			Negative++;
 		}
 
-		if ((internalBoard[2] == CoinValue or internalBoard[2] == 'C') and
-			(internalBoard[5] == CoinValue or internalBoard[5] == 'C') and
-			(internalBoard[8] == CoinValue or internalBoard[8] == 'C'))
+		if ((internalBoard[2] == 'B' or internalBoard[2] == 'C') and (internalBoard[5] == 'B' or internalBoard[5] == 'C') and (internalBoard[8] == 'B' or internalBoard[8] == 'C'))
 		{
 			Positive++;
 		}
-		else if (((internalBoard[2] != CoinValue and internalBoard[2] != 'C') or internalBoard[2] == 'C') and
-			((internalBoard[5] != CoinValue and internalBoard[5] != 'C') or internalBoard[5] == 'C') and
-			((internalBoard[8] != CoinValue and internalBoard[8] != 'C') or internalBoard[8] == 'C'))
+		else if ((internalBoard[2] != 'A' or internalBoard[2] == 'C') and (internalBoard[5] != 'A' or internalBoard[5] == 'C') and (internalBoard[8] != 'A' or internalBoard[8] == 'C'))
 		{
 			Negative++;
 		}
-
 		return Positive-Negative;
 	}
 
-
-
+	int getGoodMove()
+	{
+		if (sons.size()<=0)
+		{
+			return RValue;
+		}
+		else
+		{
+			vector<int> values;
+			for (size_t i = 0; i < sons.size(); i++)
+			{
+				values.push_back(sons[i]->getGoodMove());
+			}
+			if (isMax==true)
+			{
+				int bruh = *std::max_element(values.begin(), values.end());
+				MinimaxVal = bruh;
+				return bruh;
+			}
+			else
+			{
+				int bruh = *std::min_element(values.begin(), values.end());
+				MinimaxVal = bruh;
+				return bruh;
+			}
+		}
+	}
 };
 
 
@@ -201,15 +243,15 @@ void create_circle(double centerX, double centerY, double radius) {
 	glEnd();
 }
 
-//pos1 = 30,70
-//pos2 = 50,70
-//pos3 = 70,70
-//pos4 = 30,50
-//pos5 = 50,50
-//pos6 = 70,50
-//pos7 = 30,30
-//pos8 = 50,30
-//pos9 = 70,30
+//pos0 = 30,70
+//pos1 = 50,70
+//pos2 = 70,70
+//pos3 = 30,50
+//pos4 = 50,50
+//pos5 = 70,50
+//pos6 = 30,30
+//pos7 = 50,30
+//pos8 = 70,30
 
 void printBoard()
 {
@@ -232,6 +274,90 @@ void printBoard()
 	glVertex3d(60, 80, 0);
 
 	glEnd();
+	for (size_t i = 0; i < board.size(); i++)
+	{
+		if (board[i] != 'C')
+		{
+			if (board[i] == 'A')
+			{
+				if (i == 0)
+				{
+					create_Square(30, 70, 4);
+				}
+				if (i == 1)
+				{
+					create_Square(50, 70, 4);
+				}
+				if (i == 2)
+				{
+					create_Square(70, 70, 4);
+				}
+				if (i == 3)
+				{
+					create_Square(30, 50, 4);
+				}
+				if (i == 4)
+				{
+					create_Square(50, 50, 4);
+				}
+				if (i == 5)
+				{
+					create_Square(70, 50, 4);
+				}
+				if (i == 6)
+				{
+					create_Square(30, 30, 4);
+				}
+				if (i == 7)
+				{
+					create_Square(50, 30, 4);
+				}
+				if (i == 8)
+				{
+					create_Square(70, 30, 4);
+				}
+			}
+			else
+			{
+				if (i == 0)
+				{
+					create_circle(30, 70, 2);
+				}
+				if (i == 1)
+				{
+					create_circle(50, 70, 2);
+				}
+				if (i == 2)
+				{
+					create_circle(70, 70, 2);
+				}
+				if (i == 3)
+				{
+					create_circle(30, 50, 2);
+				}
+				if (i == 4)
+				{
+					create_circle(50, 50, 2);
+				}
+				if (i == 5)
+				{
+					create_circle(70, 50, 2);
+				}
+				if (i == 6)
+				{
+					create_circle(30, 30, 2);
+				}
+				if (i == 7)
+				{
+					create_circle(50, 30, 2);
+				}
+				if (i == 8)
+				{
+					create_circle(70, 30, 2);
+				}
+			}
+		}
+	}
 }
 
 void displayGizmo()
@@ -248,6 +374,7 @@ void displayGizmo()
 	glVertex3d(0, 0, 30);
 	glEnd();
 }
+
 void glPaint(void) {
 
 	//El fondo de la escena al color initial
@@ -255,7 +382,7 @@ void glPaint(void) {
 	glLoadIdentity();
 
 	printBoard();
-	create_Square(30, 30, 10);
+	
 	//dibuja el gizmo
 	displayGizmo();
 
@@ -286,34 +413,110 @@ GLvoid window_redraw(GLsizei width, GLsizei height) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
+void printboard() {
+	for (size_t i = 0; i < board.size(); i++)
+	{
+		cout << board[i] << "-";
+	}
+	cout << endl;
+}
+
+int deepGlobal = 0;
+
 GLvoid window_key(unsigned char key, int x, int y) {
 	switch (key) {
 	case KEY_ESC:
 		exit(0);
 		break;
-
+	case POS0:
+		board[0] = 'A';
+		printboard();
+		break;
+	case POS1:
+		board[1] = 'A';
+		printboard();
+		break;
+	case POS2:
+		board[2] = 'A';
+		printboard();
+		break;
+	case POS3:
+		board[3] = 'A';
+		printboard();
+		break;
+	case POS4:
+		board[4] = 'A';
+		printboard();
+		break;
+	case POS5:
+		board[5] = 'A';
+		printboard();
+		break;
+	case POS6:
+		board[6] = 'A';
+		printboard();
+		break;
+	case POS7:
+		board[7] = 'A';
+		printboard();
+		break;
+	case POS8:
+		board[8] = 'A';
+		printboard();
+		break;
+	case AIMOVE:
+		MiniMax* SKYNET;
+		SKYNET = new MiniMax(deepGlobal, true, board, 'B');
+		int GM = SKYNET->getGoodMove();
+		int TheChosenOne;
+		for (size_t i = 0; i < SKYNET->sons.size(); i++)
+		{
+			if (SKYNET->sons[i]->MinimaxVal == GM)
+			{
+				TheChosenOne = i;
+			}
+		}
+		board = SKYNET->sons[TheChosenOne]->internalBoard;	
+		break;
 	default:
 		break;
 	}
 
 }
-int main(int argc, char** argv) {
-	
 
+void idle() 
+{
+	glutPostRedisplay();
+}
+
+void startBoard()
+{
+	for (size_t i = 0; i < 9; i++)
+	{
+		board.push_back('C');
+	}
+}
+
+int main(int argc, char** argv) {
+	cout << "Insert deep tree: "; cin >> deepGlobal;
+	startBoard();
+	printboard();
 	//Inicializacion de la GLUT
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(800, 800); //tamaño de la ventana
 	glutInitWindowPosition(0, 0); //posicion de la ventana
 	glutCreateWindow("SKYNET"); //titulo de la ventana
-
 	init_GL(); //funcion de inicializacion de OpenGL
+
 
 	glutDisplayFunc(glPaint);
 	glutReshapeFunc(&window_redraw);
 	// Callback del teclado
 	glutKeyboardFunc(&window_key);
-
+	glutMouseFunc(&OnMouseClick);
+	glutMotionFunc(&OnMouseMotion);
+	glutIdleFunc(&idle);
 	glutMainLoop(); //bucle de rendering
 
 	return 0;
