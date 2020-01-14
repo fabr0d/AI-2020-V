@@ -72,6 +72,42 @@ bool isPossibleMove(vector<char> boardw)
 	return false;
 }
 
+void printboardchar(vector<char> board)
+{
+	int count = 0;
+	for (size_t i = 0; i < board.size(); i++)
+	{
+		count++;
+		cout << board[i];
+		if (count % 3 == 0)
+		{
+			cout << endl;
+		}
+		else
+		{
+			cout << "-";
+		}
+	}
+	//cout << endl;
+}
+
+void printVector(vector<int> liste)
+{
+	for (int i = 0; i < liste.size(); i++)
+	{
+		cout << liste[i] << ", ";
+	}
+	cout << endl;
+}
+
+void startBoard()
+{
+	for (size_t i = 0; i < 9; i++)
+	{
+		board.push_back('C');
+	}
+}
+
 class MiniMax
 {
 public:
@@ -82,22 +118,25 @@ public:
 	char Player; //Valor de jugador que le toca en ese nodo
 	int MinimaxVal;
 	vector <MiniMax*> sons;
+	int Possitive;
+	int Neggative;
 
-	MiniMax(int _deep,  bool _isMax, vector<char> Iboard, char _Player)
+	MiniMax(int _deep, bool _isMax, vector<char> Iboard, char _Player)
 	{
 		isMax = _isMax;
 		deep = _deep;
 		Player = _Player;
 		internalBoard = Iboard;
+		//printboardchar(internalBoard);
 		RValue = evaluate();
 		if (deep - 1 > 0 and isPossibleMove(internalBoard) == true)
 		{
 			for (size_t i = 0; i < 9; i++)
 			{
-				if (isValidMove(i, internalBoard) == true);
+				if (isValidMove(i, internalBoard) == true)
 				{
 					vector<char>Tboard0 = internalBoard;
-					Tboard0[0] = Player;
+					Tboard0[i] = Player;
 					char AuxChar = 'C';
 					if (Player == 'A') { AuxChar = 'B'; }
 					else { AuxChar = 'A'; }
@@ -105,6 +144,10 @@ public:
 					sons.push_back(NewSon);
 				}
 			}
+		}
+		else
+		{
+			MinimaxVal = RValue;
 		}
 	}
 
@@ -118,7 +161,7 @@ public:
 		{
 			Positive++;
 		}
-		else if ((internalBoard[2] != 'A' or internalBoard[2] == 'C') and (internalBoard[4] != 'A' or internalBoard[4] == 'C') and (internalBoard[6] != 'A' or internalBoard[6] == 'C'))
+		if ((internalBoard[2] == 'A' or internalBoard[2] == 'C') and (internalBoard[4] == 'A' or internalBoard[4] == 'C') and (internalBoard[6] == 'A' or internalBoard[6] == 'C'))
 		{
 			Negative++;
 		}
@@ -127,7 +170,7 @@ public:
 		{
 			Positive++;
 		}
-		else if ((internalBoard[0] != 'A' or internalBoard[0] == 'C') and (internalBoard[4] != 'A' or internalBoard[4] == 'C') and (internalBoard[8] != 'A' or internalBoard[8] == 'C'))
+		if ((internalBoard[0] == 'A' or internalBoard[0] == 'C') and (internalBoard[4] == 'A' or internalBoard[4] == 'C') and (internalBoard[8] == 'A' or internalBoard[8] == 'C'))
 		{
 			Negative++;
 		}
@@ -136,7 +179,7 @@ public:
 		{
 			Positive++;
 		}
-		else if ((internalBoard[0] != 'A' or internalBoard[0] == 'C') and (internalBoard[1] != 'A' or internalBoard[1] == 'C') and (internalBoard[2] != 'A' or internalBoard[2] == 'C'))
+		if ((internalBoard[0] == 'A' or internalBoard[0] == 'C') and (internalBoard[1] == 'A' or internalBoard[1] == 'C') and (internalBoard[2] == 'A' or internalBoard[2] == 'C'))
 		{
 			Negative++;
 		}
@@ -145,7 +188,7 @@ public:
 		{
 			Positive++;
 		}
-		else if ((internalBoard[3] != 'A' or internalBoard[3] == 'C') and (internalBoard[4] != 'A' or internalBoard[4] == 'C') and (internalBoard[5] != 'A' or internalBoard[5] == 'C'))
+		if ((internalBoard[3] == 'A' or internalBoard[3] == 'C') and (internalBoard[4] == 'A' or internalBoard[4] == 'C') and (internalBoard[5] == 'A' or internalBoard[5] == 'C'))
 		{
 			Negative++;
 		}
@@ -154,7 +197,7 @@ public:
 		{
 			Positive++;
 		}
-		else if ((internalBoard[6] != 'A' or internalBoard[6] == 'C') and (internalBoard[7] != 'A' or internalBoard[7] == 'C') and (internalBoard[8] != 'A' or internalBoard[8] == 'C'))
+		if ((internalBoard[6] == 'A' or internalBoard[6] == 'C') and (internalBoard[7] == 'A' or internalBoard[7] == 'C') and (internalBoard[8] == 'A' or internalBoard[8] == 'C'))
 		{
 			Negative++;
 		}
@@ -163,7 +206,7 @@ public:
 		{
 			Positive++;
 		}
-		else if ((internalBoard[0] != 'A' or internalBoard[0] == 'C') and (internalBoard[3] != 'A' or internalBoard[3] == 'C') and (internalBoard[6] != 'A' or internalBoard[6] == 'C'))
+		if ((internalBoard[0] == 'A' or internalBoard[0] == 'C') and (internalBoard[3] == 'A' or internalBoard[3] == 'C') and (internalBoard[6] == 'A' or internalBoard[6] == 'C'))
 		{
 			Negative++;
 		}
@@ -172,7 +215,7 @@ public:
 		{
 			Positive++;
 		}
-		else if ((internalBoard[1] != 'A' or internalBoard[1] == 'C') and (internalBoard[4] != 'A' or internalBoard[4] == 'C') and (internalBoard[7] != 'A' or internalBoard[7] == 'C'))
+		if ((internalBoard[1] == 'A' or internalBoard[1] == 'C') and (internalBoard[4] == 'A' or internalBoard[4] == 'C') and (internalBoard[7] == 'A' or internalBoard[7] == 'C'))
 		{
 			Negative++;
 		}
@@ -181,42 +224,164 @@ public:
 		{
 			Positive++;
 		}
-		else if ((internalBoard[2] != 'A' or internalBoard[2] == 'C') and (internalBoard[5] != 'A' or internalBoard[5] == 'C') and (internalBoard[8] != 'A' or internalBoard[8] == 'C'))
+		if ((internalBoard[2] == 'A' or internalBoard[2] == 'C') and (internalBoard[5] == 'A' or internalBoard[5] == 'C') and (internalBoard[8] == 'A' or internalBoard[8] == 'C'))
 		{
 			Negative++;
 		}
-		return Positive-Negative;
-	}
-
-	int getGoodMove()
-	{
-		if (sons.size()<=0)
-		{
-			return RValue;
-		}
-		else
-		{
-			vector<int> values;
-			for (size_t i = 0; i < sons.size(); i++)
-			{
-				values.push_back(sons[i]->getGoodMove());
-			}
-			if (isMax==true)
-			{
-				int bruh = *std::max_element(values.begin(), values.end());
-				MinimaxVal = bruh;
-				return bruh;
-			}
-			else
-			{
-				int bruh = *std::min_element(values.begin(), values.end());
-				MinimaxVal = bruh;
-				return bruh;
-			}
-		}
+		Possitive = Positive;
+		Neggative = Negative;
+		//cout << "Possitive: " << Positive << "- Negative: " << Negative<<" = "<<Positive-Negative << endl;
+		return Positive - Negative;
 	}
 };
 
+int getGoodMove(MiniMax* minimaxtree)
+{
+	if (minimaxtree->sons.size() <= 0)
+	{
+		return minimaxtree->RValue;
+	}
+	else
+	{
+		vector<int> values;
+		for (size_t i = 0; i < minimaxtree->sons.size(); i++)
+		{
+			values.push_back(getGoodMove(minimaxtree->sons[i]));
+		}
+		if (minimaxtree->isMax == true)
+		{
+			int bruh = *std::max_element(values.begin(), values.end());
+			minimaxtree->MinimaxVal = bruh;
+			return bruh;
+		}
+		else if (minimaxtree->isMax == false)
+		{
+			int bruh = *std::min_element(values.begin(), values.end());
+			minimaxtree->MinimaxVal = bruh;
+			return bruh;
+		}
+	}
+}
+
+int deepGlobal = 0;
+
+bool winnerChecker()
+{
+	if (board[2] == board[4] == board[6] and board[2] != 'C' and board[4] != 'C' and board[6] != 'C')
+	{
+		if (board[2] == 'A')
+		{
+			cout << "HUMAN WIN !!!" << endl;
+			return true;
+		}
+		else
+		{
+			cout << "AI WIN !!!" << endl;
+			return true;
+		}
+
+	}
+	else if (board[0] == board[4] == board[8] and board[0] != 'C' and board[4] != 'C' and board[8] != 'C')
+	{
+		if (board[0] == 'A')
+		{
+			cout << "HUMAN WIN !!!" << endl;
+			return true;
+		}
+		else
+		{
+			cout << "AI WIN !!!" << endl;
+			return true;
+		}
+	}
+	else if (board[0] == board[1] == board[2] and board[0] != 'C' and board[1] != 'C' and board[2] != 'C')
+	{
+		if (board[0] == 'A')
+		{
+			cout << "HUMAN WIN !!!" << endl;
+			return true;
+		}
+		else
+		{
+			cout << "AI WIN !!!" << endl;
+			return true;
+		}
+	}
+	else if (board[3] == board[4] == board[5] and board[3] != 'C' and board[4] != 'C' and board[5] != 'C')
+	{
+		if (board[3] == 'A')
+		{
+			cout << "HUMAN WIN !!!" << endl;
+			return true;
+		}
+		else
+		{
+			cout << "AI WIN !!!" << endl;
+			return true;
+		}
+	}
+	else if (board[6] == board[7] == board[8] and board[6] != 'C' and board[7] != 'C' and board[8] != 'C')
+	{
+		if (board[6] == 'A')
+		{
+			cout << "HUMAN WIN !!!" << endl;
+			return true;
+		}
+		else
+		{
+			cout << "AI WIN !!!" << endl;
+			return true;
+		}
+	}
+	else if (board[0] == board[3] == board[6] and board[0] != 'C' and board[3] != 'C' and board[6] != 'C')
+	{
+		if (board[0] == 'A')
+		{
+			cout << "HUMAN WIN !!!" << endl;
+			return true;
+		}
+		else
+		{
+			cout << "AI WIN !!!" << endl;
+			return true;
+		}
+	}
+	else if (board[1] == board[4] == board[7] and board[1] != 'C' and board[4] != 'C' and board[7] != 'C')
+	{
+		if (board[1] == 'A')
+		{
+			cout << "HUMAN WIN !!!" << endl;
+			return true;
+		}
+		else
+		{
+			cout << "AI WIN !!!" << endl;
+			return true;
+		}
+	}
+	else if (board[2] == board[5] == board[8] and board[2] != 'C' and board[5] != 'C' and board[8] != 'C')
+	{
+		if (board[2] == 'A')
+		{
+			cout << "HUMAN WIN !!!" << endl;
+			return true;
+		}
+		else
+		{
+			cout << "AI WIN !!!" << endl;
+			return true;
+		}
+	}
+	else if (board[0] != 'C' and board[1] != 'C' and board[2] != 'C' and board[3] != 'C' and board[4] != 'C' and board[5] != 'C' and board[6] != 'C' and board[7] != 'C' and board[8] != 'C')
+	{
+		cout << "TIEEEEEE !!!!!!" << endl;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 
 void create_Square(double centerX, double centerY, double longitude)
 {
@@ -413,7 +578,8 @@ GLvoid window_redraw(GLsizei width, GLsizei height) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void printboard() {
+void printboard() 
+{
 	for (size_t i = 0; i < board.size(); i++)
 	{
 		cout << board[i] << "-";
@@ -421,54 +587,100 @@ void printboard() {
 	cout << endl;
 }
 
-int deepGlobal = 0;
+bool winval = false;
 
 GLvoid window_key(unsigned char key, int x, int y) {
-	switch (key) {
-	case KEY_ESC:
-		exit(0);
-		break;
+	switch (key) 
+	{
 	case POS0:
 		board[0] = 'A';
 		printboard();
+		printboardchar(board);
+		if (winnerChecker() == true)
+		{
+			cout << "--------------------------END--------------------------" << endl;
+		}
 		break;
 	case POS1:
 		board[1] = 'A';
 		printboard();
+		printboardchar(board);
+		if (winnerChecker() == true)
+		{
+			cout << "--------------------------END--------------------------" << endl;
+		}
 		break;
 	case POS2:
 		board[2] = 'A';
 		printboard();
+		printboardchar(board);
+		if (winnerChecker() == true)
+		{
+			cout << "--------------------------END--------------------------" << endl;
+		}
 		break;
 	case POS3:
 		board[3] = 'A';
 		printboard();
+		printboardchar(board);
+		if (winnerChecker() == true)
+		{
+			cout << "--------------------------END--------------------------" << endl;
+		}
 		break;
 	case POS4:
 		board[4] = 'A';
 		printboard();
+		printboardchar(board);
+		if (winnerChecker() == true)
+		{
+			cout << "--------------------------END--------------------------" << endl;
+		}
 		break;
 	case POS5:
 		board[5] = 'A';
 		printboard();
+		printboardchar(board);
+		if (winnerChecker() == true)
+		{
+			cout << "--------------------------END--------------------------" << endl;
+		}
 		break;
 	case POS6:
 		board[6] = 'A';
 		printboard();
+		printboardchar(board);
+		if (winnerChecker() == true)
+		{
+			cout << "--------------------------END--------------------------" << endl;
+		}
 		break;
 	case POS7:
 		board[7] = 'A';
 		printboard();
+		printboardchar(board);
+		if (winnerChecker() == true)
+		{
+			cout << "--------------------------END--------------------------" << endl;
+		}
 		break;
 	case POS8:
 		board[8] = 'A';
 		printboard();
+		printboardchar(board);
+		if (winnerChecker() == true)
+		{
+			cout << "--------------------------END--------------------------" << endl;
+		}
 		break;
 	case AIMOVE:
+		int GM;
+		int TheChosenOne;
+		cout << "IA move now : " << endl;
 		MiniMax* SKYNET;
 		SKYNET = new MiniMax(deepGlobal, true, board, 'B');
-		int GM = SKYNET->getGoodMove();
-		int TheChosenOne;
+		cout << "mimimax tree done..." << endl;
+		GM = getGoodMove(SKYNET);
 		for (size_t i = 0; i < SKYNET->sons.size(); i++)
 		{
 			if (SKYNET->sons[i]->MinimaxVal == GM)
@@ -476,9 +688,14 @@ GLvoid window_key(unsigned char key, int x, int y) {
 				TheChosenOne = i;
 			}
 		}
-		board = SKYNET->sons[TheChosenOne]->internalBoard;	
-		break;
-	default:
+		board = SKYNET->sons[TheChosenOne]->internalBoard;
+		printboard();
+		printboardchar(board);
+		if (winnerChecker() == true)
+		{
+			cout << "--------------------------END--------------------------" << endl;
+		}
+		delete SKYNET;
 		break;
 	}
 
@@ -489,18 +706,12 @@ void idle()
 	glutPostRedisplay();
 }
 
-void startBoard()
-{
-	for (size_t i = 0; i < 9; i++)
-	{
-		board.push_back('C');
-	}
-}
-
 int main(int argc, char** argv) {
 	cout << "Insert deep tree: "; cin >> deepGlobal;
+	winval = false;
 	startBoard();
 	printboard();
+	printboardchar(board);
 	//Inicializacion de la GLUT
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);

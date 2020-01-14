@@ -1,17 +1,18 @@
 ﻿  main.cpp
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(97,47): warning C4390: ';': empty controlled statement found; is this the intent?
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(225,48): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(225,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(226,48): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(226,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(227,48): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(227,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(228,48): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(228,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(229,48): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(229,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(239,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(240,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(241,29): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(241,16): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(96,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(390,48): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(390,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(391,48): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(391,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(392,48): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(392,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(393,48): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(393,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(394,48): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(394,21): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(404,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(405,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(406,29): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(406,16): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\main.cpp(264): warning C4715: 'getGoodMove': not all control paths return a value
   T2-TicTacToe.vcxproj -> C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T2-TicTacToe\Debug\T2-TicTacToe.exe
