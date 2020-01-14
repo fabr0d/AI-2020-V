@@ -31,6 +31,19 @@ template <typename T, size_t N> const T* myend(const T(&a)[N]) { return a + N; }
 
 vector<char> board;
 
+vector<int> getSameValuesInAVector(vector<int> values, int pattern) //not used
+{
+	vector<int> ans;
+	for (size_t i = 0; i < values.size(); i++)
+	{
+		if (values[i]==pattern)
+		{
+			ans.push_back(i); //pushea el la posisicion en el vector
+		}
+	}
+	return ans;
+}
+
 void OnMouseClick(int button, int state, int x, int y)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
@@ -248,17 +261,18 @@ int getGoodMove(MiniMax* minimaxtree)
 		{
 			values.push_back(getGoodMove(minimaxtree->sons[i]));
 		}
+		
+		sort(values.begin(), values.end()); // menor a mayor
+		//printVector(values);
 		if (minimaxtree->isMax == true)
 		{
-			int bruh = *std::max_element(values.begin(), values.end());
-			minimaxtree->MinimaxVal = bruh;
-			return bruh;
+			minimaxtree->MinimaxVal = values[values.size() - 1];
+			return values[values.size() - 1];
 		}
-		else if (minimaxtree->isMax == false)
+		if (minimaxtree->isMax == false)
 		{
-			int bruh = *std::min_element(values.begin(), values.end());
-			minimaxtree->MinimaxVal = bruh;
-			return bruh;
+			minimaxtree->MinimaxVal = values[0];
+			return values[0];
 		}
 	}
 }
@@ -267,112 +281,75 @@ int deepGlobal = 0;
 
 bool winnerChecker()
 {
-	if (board[2] == board[4] == board[6] and board[2] != 'C' and board[4] != 'C' and board[6] != 'C')
-	{
-		if (board[2] == 'A')
-		{
-			cout << "HUMAN WIN !!!" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "AI WIN !!!" << endl;
-			return true;
-		}
-
+	bool wincondition = false;
+	if (board[2] == 'A' and board[4] == 'A' and board[6] == 'A')
+	{	
+		cout << "HUMAN WIN !!!" << endl; wincondition = true; return true;
 	}
-	else if (board[0] == board[4] == board[8] and board[0] != 'C' and board[4] != 'C' and board[8] != 'C')
+	if (board[2] == 'B' and board[4] == 'B' and board[6] == 'B')
 	{
-		if (board[0] == 'A')
-		{
-			cout << "HUMAN WIN !!!" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "AI WIN !!!" << endl;
-			return true;
-		}
+		cout << "AI WIN !!!" << endl; wincondition = true; return true;
 	}
-	else if (board[0] == board[1] == board[2] and board[0] != 'C' and board[1] != 'C' and board[2] != 'C')
+	if (board[0] == 'A' and board[4] == 'A' and board[8] == 'A')
 	{
-		if (board[0] == 'A')
-		{
-			cout << "HUMAN WIN !!!" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "AI WIN !!!" << endl;
-			return true;
-		}
+		cout << "HUMAN WIN !!!" << endl; wincondition = true; return true;
 	}
-	else if (board[3] == board[4] == board[5] and board[3] != 'C' and board[4] != 'C' and board[5] != 'C')
+	if (board[0] == 'B' and board[4] == 'B' and board[8] == 'B')
 	{
-		if (board[3] == 'A')
-		{
-			cout << "HUMAN WIN !!!" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "AI WIN !!!" << endl;
-			return true;
-		}
+		cout << "AI WIN !!!" << endl; wincondition = true; return true;
 	}
-	else if (board[6] == board[7] == board[8] and board[6] != 'C' and board[7] != 'C' and board[8] != 'C')
+	if (board[0] == 'A' and board[1] == 'A' and board[2] == 'A')
 	{
-		if (board[6] == 'A')
-		{
-			cout << "HUMAN WIN !!!" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "AI WIN !!!" << endl;
-			return true;
-		}
+		cout << "HUMAN WIN !!!" << endl; wincondition = true; return true;
 	}
-	else if (board[0] == board[3] == board[6] and board[0] != 'C' and board[3] != 'C' and board[6] != 'C')
+	if (board[0] == 'B' and board[1] == 'B' and board[2] == 'B')
 	{
-		if (board[0] == 'A')
-		{
-			cout << "HUMAN WIN !!!" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "AI WIN !!!" << endl;
-			return true;
-		}
+		cout << "AI WIN !!!" << endl; wincondition = true; return true;
 	}
-	else if (board[1] == board[4] == board[7] and board[1] != 'C' and board[4] != 'C' and board[7] != 'C')
+	if (board[3] == 'A' and board[4] == 'A' and board[5] == 'A')
 	{
-		if (board[1] == 'A')
-		{
-			cout << "HUMAN WIN !!!" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "AI WIN !!!" << endl;
-			return true;
-		}
+		cout << "HUMAN WIN !!!" << endl; wincondition = true; return true;
 	}
-	else if (board[2] == board[5] == board[8] and board[2] != 'C' and board[5] != 'C' and board[8] != 'C')
+	if (board[3] == 'B' and board[4] == 'B' and board[5] == 'B')
 	{
-		if (board[2] == 'A')
-		{
-			cout << "HUMAN WIN !!!" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "AI WIN !!!" << endl;
-			return true;
-		}
+		cout << "AI WIN !!!" << endl; wincondition = true; return true;
 	}
-	else if (board[0] != 'C' and board[1] != 'C' and board[2] != 'C' and board[3] != 'C' and board[4] != 'C' and board[5] != 'C' and board[6] != 'C' and board[7] != 'C' and board[8] != 'C')
+	if (board[6] == 'A' and board[7] == 'A' and board[8] == 'A')
+	{
+		cout << "HUMAN WIN !!!" << endl; wincondition = true; return true;
+	}
+	if (board[6] == 'B' and board[7] == 'B' and board[8] == 'B')
+	{
+		cout << "AI WIN !!!" << endl; wincondition = true; return true;
+	}
+	if (board[0] == 'A' and board[3] == 'A' and board[6] == 'A')
+	{
+		cout << "HUMAN WIN !!!" << endl; wincondition = true; return true;
+	}
+	if (board[0] == 'B' and board[3] == 'B' and board[6] == 'B')
+	{
+		cout << "AI WIN !!!" << endl; wincondition = true; return true;
+	}
+	if (board[1] == 'A' and board[4] == 'A' and board[7] == 'A')
+	{
+		cout << "HUMAN WIN !!!" << endl; wincondition = true; return true;
+	}
+	if (board[1] == 'B' and board[4] == 'B' and board[7] == 'B')
+	{
+		cout << "AI WIN !!!" << endl; wincondition = true; return true;
+	}
+	if (board[2] == 'A' and board[5] == 'A' and board[8] == 'A')
+	{
+		cout << "HUMAN WIN !!!" << endl; wincondition = true; return true;
+	}
+	if (board[2] == 'B' and board[5] == 'B' and board[8] == 'B')
+	{
+		cout << "AI WIN !!!" << endl; wincondition = true; return true;
+	}
+	if (board[0] != 'C' and board[1] != 'C' and board[2] != 'C' and 
+		board[3] != 'C' and board[4] != 'C' and board[5] != 'C' and 
+		board[6] != 'C' and board[7] != 'C' and board[8] != 'C' and 
+		wincondition == false)
 	{
 		cout << "TIEEEEEE !!!!!!" << endl;
 		return true;
@@ -681,14 +658,16 @@ GLvoid window_key(unsigned char key, int x, int y) {
 		SKYNET = new MiniMax(deepGlobal, true, board, 'B');
 		cout << "mimimax tree done..." << endl;
 		GM = getGoodMove(SKYNET);
+		vector<int> posibles;
 		for (size_t i = 0; i < SKYNET->sons.size(); i++)
 		{
 			if (SKYNET->sons[i]->MinimaxVal == GM)
 			{
-				TheChosenOne = i;
+				posibles.push_back(i); //candidatos con el valor mismo valor GM
 			}
 		}
-		board = SKYNET->sons[TheChosenOne]->internalBoard;
+		int randumm = rand() % 100;
+		board = SKYNET->sons[ posibles[randumm % posibles.size()] ]->internalBoard;;
 		printboard();
 		printboardchar(board);
 		if (winnerChecker() == true)
