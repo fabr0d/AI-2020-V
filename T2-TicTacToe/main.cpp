@@ -526,7 +526,7 @@ void glPaint(void) {
 	printBoard();
 	
 	//dibuja el gizmo
-	displayGizmo();
+	//displayGizmo();
 
 	//doble buffer, mantener esta instruccion al fin de la funcion
 	glutSwapBuffers();
