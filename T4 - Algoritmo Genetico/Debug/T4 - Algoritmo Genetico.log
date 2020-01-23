@@ -1,2 +1,7 @@
 ﻿  main.cpp
-  T4 - Algoritmo Genetico.vcxproj -> C:\Users\Fab\Documents\GitHub\Computacion-Grafica-2019-02\AI-2020-V\T4 - Algoritmo Genetico\Debug\T4 - Algoritmo Genetico.exe
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(54,15): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(55,15): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(62,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(77,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(193): error C4716: 'geneticAlgorithm': must return a value
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(176): error C4716: 'genRandomPoblation': must return a value
