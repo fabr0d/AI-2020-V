@@ -129,51 +129,10 @@ void drawEdgesFromPrincipal()
 	}
 }
 
-float printPath(vector<Point*> Path, Point* A, Point* B)
-{
-	float answ = 0;
-	for (size_t i = 0; i < Path.size(); i++)
-	{
-		if (i + 1 != Path.size())
-		{
-			glBegin(GL_LINES);
-			glColor3d(1.00000f, 0.20000f, 0.80000f);
-			glVertex3d(Path[i]->x, Path[i]->y, 0);
-			glVertex3d(Path[i + 1]->x, Path[i + 1]->y, 0);
-			glEnd();
-			answ = answ + Euclidean_distance(Path[i], Path[i + 1]);
-		}
-	}
-	cout << "Distancia Recorrida: " << answ << endl;
-	return answ;
-}
-
-void drawPointsFromPath(vector<Point*> Path, Point* A, Point* B)
-{
-	glPointSize(5.0);
-	glBegin(GL_POINTS);
-	glColor3d(0.000, 0.980, 0.604);
-	glVertex3f(A->x, A->y, 0.0);
-	glEnd();
-	for (size_t i = 0; i < Path.size(); i++)
-	{
-		glPointSize(5.0);
-		glBegin(GL_POINTS);
-		glColor3d(0.000, 0.980, 0.604);
-		glVertex3f(Path[i]->x, Path[i]->y, 0.0);
-		glEnd();
-	}
-	glPointSize(5.0);
-	glBegin(GL_POINTS);
-	glColor3d(0.000, 0.980, 0.604);
-	glVertex3f(B->x, B->y, 0.0);
-	glEnd();
-}
-
 /////////////////////////////////////////////////////////////////////////////////////
 vector<vector<Point>> Poblacion;
 
-vector<vector<Point>> genRandomIniciañPoblation()
+vector<vector<Point>> genRandomInicialPoblation()
 {
 	vector<vector<Point>> anw;
 	vector<Point> tempo = TSMcountriesPrincipal;
@@ -196,15 +155,81 @@ float CalculateAptitude(vector<Point> Ruta)
 	return anw;
 }
 
+vector<int> genRandomPair(int maxVal)
+{
+	vector<int> PseudoPair;
+	PseudoPair.push_back(rand() % (maxVal + 1)); //de 0 a maxval, if maxval = 10 then 0 - 11 in rand 0 - 10
+	PseudoPair.push_back(rand() % (maxVal + 1));
+	while (PseudoPair[0] == PseudoPair[1])
+	{
+		PseudoPair[1] = rand() % (maxVal + 1);
+	}
+	return PseudoPair;
+}
+
+vector<Point> OXCrossover(vector<int> PsPair, vector<vector<Point>> winners)
+{
+
+}
+
+vector<vector<Point>> TournamentSelectionAndCrossing(vector<vector<Point>> poblationX)
+{
+	cout << "Empezara el torneo ..." << endl;
+	vector<vector<Point>> Result;
+	vector<int> myvector;
+	for (int i = 0; i < munofpnts; ++i) myvector.push_back(i); // 0 1 2 3 4 5 6 7 8 ... munofpnts
+	//recomendado un numero par porq estos caminos se enfrentara a otro, recomendado numero par de poblacion
+	random_shuffle(myvector.begin(), myvector.end());
+	int a = 0;
+	int b = 1;
+	for (int i = 0; i < (poblationX.size()) / 2; i++)
+	{
+		if (CalculateAptitude(poblationX[myvector[a]]) < CalculateAptitude(poblationX[myvector[b]]))
+		{
+			Result.push_back(poblationX[myvector[a]]);
+		}
+		else
+		{
+			Result.push_back(poblationX[myvector[b]]);
+		}
+		a = a + 2;
+		b = b + 2;
+
+	}
+	cout << "Numero de Ganadores: " << Result.size() << endl;
+	cout << "Empezara el Crossing ..." << endl;
+	
+	//vector Result contiene el resultado de la seleccion por torneo
+	int poblacionFaltante = poblationX.size() - Result.size();
+	int poblacionFaltanteEstatica = poblationX.size() - Result.size();
+	while (poblacionFaltante != poblationX.size())
+	{
+
+	}
+}
+
 vector<vector<Point>> geneticAlgorithm(vector<vector<Point>> P)
 {
-	Poblacion = genRandomIniciañPoblation();
+	Poblacion = genRandomInicialPoblation();
 	vector<pair<int, float>> PositionOfAPoblacion_and_Aptitude;
 	for (size_t i = 0; i < Poblacion.size(); i++)
 	{
-		PositionOfAPoblacion_and_Aptitude.push_back( pair<int,float> ( i , CalculateAptitude(Poblacion[i]) ) );
+		PositionOfAPoblacion_and_Aptitude.push_back(pair<int, float>(i, CalculateAptitude(Poblacion[i])));
 	}
-	float maxval = 0.0;
+	float minval = 9999999.9;
+	float media = 0.0;
+	for (int i = 0; i < PositionOfAPoblacion_and_Aptitude.size(); i++)
+	{
+		if (PositionOfAPoblacion_and_Aptitude[i].second < minval)
+		{
+			minval = PositionOfAPoblacion_and_Aptitude[i].second;
+		}
+		media = media + PositionOfAPoblacion_and_Aptitude[i].second;
+	}
+	media = media / PositionOfAPoblacion_and_Aptitude.size();
+	cout << "Min val finded : " << minval << endl;
+	cout << "Media val: " << media << endl;
+
 
 }
 
