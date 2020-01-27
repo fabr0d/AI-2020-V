@@ -1,7 +1,11 @@
 ﻿  main.cpp
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(54,15): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(55,15): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(62,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(77,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(193): error C4716: 'geneticAlgorithm': must return a value
-C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(176): error C4716: 'genRandomPoblation': must return a value
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(56,15): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(63,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(79,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(157,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(249,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(292,26): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(294,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\main.cpp(389,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  T4 - Algoritmo Genetico.vcxproj -> C:\Users\fabro\OneDrive\Documentos\GitHub\AI-2020-V\T4 - Algoritmo Genetico\Debug\T4 - Algoritmo Genetico.exe

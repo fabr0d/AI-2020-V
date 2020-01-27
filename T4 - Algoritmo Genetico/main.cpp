@@ -129,6 +129,24 @@ void drawEdgesFromPrincipal()
 	}
 }
 
+void printPoint(Point Pnt)
+{
+	cout << "(" << Pnt.x << "," << Pnt.y << ")";
+}
+
+void printPoblation(vector<vector<Point>> Pobla)
+{
+	for (size_t i = 0; i < Pobla.size(); i++)
+	{
+		for (size_t j = 0; j < Pobla[i].size(); j++)
+		{
+			printPoint(Pobla[i][j]); cout << " - ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 vector<vector<Point>> Poblacion;
 
@@ -167,9 +185,47 @@ vector<int> genRandomPair(int maxVal)
 	return PseudoPair;
 }
 
+bool findInPath(vector<Point> son, Point toF)
+{
+	for (size_t i = 0; i < son.size(); i++)
+	{
+		if (son[i].x == toF.x and son[i].y == toF.y)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 vector<Point> OXCrossover(vector<int> PsPair, vector<vector<Point>> winners)
 {
-
+	// se usaran substring de los padres de tamaño 3
+	int max = munofpnts - 2; //numero de ciudades maxima - 2
+	int min = 1; // posicion 0 - (1) para
+	int randNum = rand() % (max - min + 1) + min; //max min
+	vector<int> subpath = { randNum - 1, randNum, randNum + 1 };
+	vector<Point> Parent1 = winners[PsPair[0]];
+	vector<Point> Parent2 = winners[PsPair[1]];
+	vector<Point> Son(munofpnts,Point()); //lena vector con puntos 0,0
+	//example
+	//subpath : 3 4 5
+	//Parent 1: 8 4 7 (3 6 2) 5 1 9 0
+	//Parent 2: 0 1 2 3 4 5 6 7 8 9
+	//son :     $ $ $ $ $ $ $ $ $ $
+	for (size_t i = 0; i < subpath.size(); i++)
+	{
+		Son[subpath[i]] = Parent1[subpath[i]];
+	}
+	//son : $ $ $ 3 6 2 $ $ $ $
+	for (size_t i = 0; i < Parent2.size(); i++)
+	{
+		if (findInPath(Son, Parent2[i]) == false)
+		{
+			Son.push_back(Parent2[i]);
+		}
+	}
+	//son : 0 1 4 3 6 2 5 7 8 9
+	return Son;
 }
 
 vector<vector<Point>> TournamentSelectionAndCrossing(vector<vector<Point>> poblationX)
@@ -180,6 +236,14 @@ vector<vector<Point>> TournamentSelectionAndCrossing(vector<vector<Point>> pobla
 	for (int i = 0; i < munofpnts; ++i) myvector.push_back(i); // 0 1 2 3 4 5 6 7 8 ... munofpnts
 	//recomendado un numero par porq estos caminos se enfrentara a otro, recomendado numero par de poblacion
 	random_shuffle(myvector.begin(), myvector.end());
+	///////////////////////////////////////////////////
+	cout << "Posiciones de los caminos shuffleados :";
+	for (size_t i = 0; i < myvector.size(); i++)
+	{
+		cout << myvector[i] << ", ";
+	}
+	cout << endl;
+	///////////////////////////////////////////////////
 	int a = 0;
 	int b = 1;
 	for (int i = 0; i < (poblationX.size()) / 2; i++)
@@ -196,25 +260,34 @@ vector<vector<Point>> TournamentSelectionAndCrossing(vector<vector<Point>> pobla
 		b = b + 2;
 
 	}
-	cout << "Numero de Ganadores: " << Result.size() << endl;
+	cout << "Ganadores: " << endl;
+	printPoblation(Result);
 	cout << "Empezara el Crossing ..." << endl;
 	
 	//vector Result contiene el resultado de la seleccion por torneo
 	int poblacionFaltante = poblationX.size() - Result.size();
+	cout << "poblacionFaltante: " << poblacionFaltante << endl;
 	int poblacionFaltanteEstatica = poblationX.size() - Result.size();
+	cout << "poblacionFaltanteEstatica: " << poblacionFaltanteEstatica << endl;
 	while (poblacionFaltante != poblationX.size())
 	{
-
+		Result.push_back(
+			OXCrossover(
+				genRandomPair(poblacionFaltanteEstatica),
+				Result
+			)
+		);
+		poblacionFaltante++;
 	}
+	return Result;
 }
 
 vector<vector<Point>> geneticAlgorithm(vector<vector<Point>> P)
 {
-	Poblacion = genRandomInicialPoblation();
 	vector<pair<int, float>> PositionOfAPoblacion_and_Aptitude;
-	for (size_t i = 0; i < Poblacion.size(); i++)
+	for (size_t i = 0; i < P.size(); i++)
 	{
-		PositionOfAPoblacion_and_Aptitude.push_back(pair<int, float>(i, CalculateAptitude(Poblacion[i])));
+		PositionOfAPoblacion_and_Aptitude.push_back(pair<int, float>(i, CalculateAptitude(P[i])));
 	}
 	float minval = 9999999.9;
 	float media = 0.0;
@@ -229,8 +302,12 @@ vector<vector<Point>> geneticAlgorithm(vector<vector<Point>> P)
 	media = media / PositionOfAPoblacion_and_Aptitude.size();
 	cout << "Min val finded : " << minval << endl;
 	cout << "Media val: " << media << endl;
+	printPoblation(P);
 
-
+	cout << "Empezara el Torneo para la seleccion y el cruzamiento ..." << endl;
+	vector<vector<Point>> NuevaPoblacion;
+	NuevaPoblacion = TournamentSelectionAndCrossing(P);
+	return NuevaPoblacion;
 }
 
 void displayGizmo()
@@ -309,6 +386,7 @@ GLvoid window_key(unsigned char key, int x, int y) {
 
 
 int main(int argc, char** argv) {
+	srand(time(NULL));
 	numberTSMCountries = 200;
 	cout << "numero de ciudades: ";
 	cin >> munofpnts;
@@ -319,7 +397,16 @@ int main(int argc, char** argv) {
 	createTSMCountries();
 	getTenRandomCountries();
 
+	Poblacion = genRandomInicialPoblation();
 
+	string test = "";
+
+	while (test != "end")
+	{
+		Poblacion = geneticAlgorithm(Poblacion);
+		cout << "continuar?" << endl;
+		cin >> test;
+	}
 
 	//Inicializacion de la GLUT
 	glutInit(&argc, argv);
