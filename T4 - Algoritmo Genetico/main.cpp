@@ -13,6 +13,7 @@
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
 #define KEY_ESC 27
+#define KEY_G 71
 using namespace std;
 
 class Point
@@ -48,6 +49,7 @@ float Euclidean_distance(Point P, Point N)
 vector<Point> TSMCountries;
 int numberTSMCountries = 0;
 
+//genera las ciudades globales
 void createTSMCountries()
 {
 	for (int i = 0; i < numberTSMCountries; i++)
@@ -58,6 +60,7 @@ void createTSMCountries()
 	}
 }
 
+//dibuja las ciudades globales
 void drawTSMCountries()
 {
 	for (size_t i = 0; i < numberTSMCountries; i++)
@@ -74,6 +77,7 @@ vector<Point> TSMcountriesPrincipal;
 int munofpnts = 0;
 int poblationNumber = 0;
 
+//dibuja los puntos a tomar en el TSM
 void drawTSMCountriesPrincipal()
 {
 	for (size_t i = 0; i < munofpnts; i++)
@@ -114,6 +118,7 @@ void getTenRandomCountries()
 	}
 }
 
+//dibuja los caminos entre las ciudades entre el TSM
 void drawEdgesFromPrincipal()
 {
 	for (size_t i = 0; i < TSMcountriesPrincipal.size(); i++)
@@ -129,9 +134,23 @@ void drawEdgesFromPrincipal()
 	}
 }
 
+/////////////////////////////////////////////////////////////////////////////////////
+
+vector<vector<Point>> Poblacion;
+vector<Point> BestoPath;
+
 void printPoint(Point Pnt)
 {
 	cout << "(" << Pnt.x << "," << Pnt.y << ")";
+}
+
+void printPath(vector<Point> path)
+{
+	for (size_t i = 0; i < path.size(); i++)
+	{
+		printPoint(path[i]); cout << " - ";
+	}
+	cout << endl;
 }
 
 void printPoblation(vector<vector<Point>> Pobla)
@@ -146,9 +165,6 @@ void printPoblation(vector<vector<Point>> Pobla)
 	}
 	cout << endl;
 }
-
-/////////////////////////////////////////////////////////////////////////////////////
-vector<vector<Point>> Poblacion;
 
 vector<vector<Point>> genRandomInicialPoblation()
 {
@@ -200,12 +216,18 @@ bool findInPath(vector<Point> son, Point toF)
 vector<Point> OXCrossover(vector<int> PsPair, vector<vector<Point>> winners)
 {
 	// se usaran substring de los padres de tamaño 3
+	//cout << "Pair: " << PsPair[0] << "-" << PsPair[1] << endl;
 	int max = munofpnts - 2; //numero de ciudades maxima - 2
-	int min = 1; // posicion 0 - (1) para
+	int min = 2; // posicion 0 - (1) para
 	int randNum = rand() % (max - min + 1) + min; //max min
 	vector<int> subpath = { randNum - 1, randNum, randNum + 1 };
+	cout << "subpath del camino: " << subpath[0] << "-" << subpath[1] << "-" << subpath[2] << endl;
 	vector<Point> Parent1 = winners[PsPair[0]];
+	//cout << "Parent1: ";
+	//printPath(Parent1);
 	vector<Point> Parent2 = winners[PsPair[1]];
+	//cout << "Parent2: ";
+	//printPath(Parent2);
 	vector<Point> Son(munofpnts,Point()); //lena vector con puntos 0,0
 	//example
 	//subpath : 3 4 5
@@ -216,14 +238,28 @@ vector<Point> OXCrossover(vector<int> PsPair, vector<vector<Point>> winners)
 	{
 		Son[subpath[i]] = Parent1[subpath[i]];
 	}
+	//cout << "default Son: ";
+	//printPath(Son);
 	//son : $ $ $ 3 6 2 $ $ $ $
+	vector<Point> temporal;
 	for (size_t i = 0; i < Parent2.size(); i++)
 	{
 		if (findInPath(Son, Parent2[i]) == false)
 		{
-			Son.push_back(Parent2[i]);
+			temporal.push_back(Parent2[i]);
 		}
 	}
+	int ind = 0;
+	for (size_t i = 0; i < Son.size(); i++)
+	{
+		if (Son[i].x == 0 and Son[i].y == 0)
+		{
+			Son[i] = temporal[ind];
+			ind++;
+		}
+	}
+	//cout << "final Son: ";
+	//printPath(Son);
 	//son : 0 1 4 3 6 2 5 7 8 9
 	return Son;
 }
@@ -271,13 +307,16 @@ vector<vector<Point>> TournamentSelectionAndCrossing(vector<vector<Point>> pobla
 	cout << "poblacionFaltanteEstatica: " << poblacionFaltanteEstatica << endl;
 	while (poblacionFaltante != poblationX.size())
 	{
+		vector<int> pseudoPair = genRandomPair(poblacionFaltanteEstatica-1);
 		Result.push_back(
 			OXCrossover(
-				genRandomPair(poblacionFaltanteEstatica),
+				pseudoPair,
 				Result
 			)
 		);
 		poblacionFaltante++;
+		//cout << "poblacion añadida <<<<<<<<<<<<<<<" << endl;
+		//printPoblation(Result);
 	}
 	return Result;
 }
@@ -310,6 +349,51 @@ vector<vector<Point>> geneticAlgorithm(vector<vector<Point>> P)
 	return NuevaPoblacion;
 }
 
+vector<Point> BestPath(vector<vector<Point>> pobla)
+{
+	vector<pair<int, float>> PositionOfAPoblacion_and_Aptitude;
+	for (size_t i = 0; i < pobla.size(); i++)
+	{
+		PositionOfAPoblacion_and_Aptitude.push_back(pair<int, float>(i, CalculateAptitude(pobla[i])));
+	}
+	float minval = 9999999.9;
+	float media = 0.0;
+	for (int i = 0; i < PositionOfAPoblacion_and_Aptitude.size(); i++)
+	{
+		if (PositionOfAPoblacion_and_Aptitude[i].second < minval)
+		{
+			minval = PositionOfAPoblacion_and_Aptitude[i].second;
+		}
+		media = media + PositionOfAPoblacion_and_Aptitude[i].second;
+	}
+	media = media / PositionOfAPoblacion_and_Aptitude.size();
+	//cout << "Min val finded : " << minval << endl;
+	//cout << "Media val: " << media << endl;
+	int positoprint = 0;
+	for (size_t i = 0; i < PositionOfAPoblacion_and_Aptitude.size(); i++)
+	{
+		if (PositionOfAPoblacion_and_Aptitude[i].second == minval)
+		{
+			positoprint = PositionOfAPoblacion_and_Aptitude[i].first;
+		}
+	}
+	return pobla[positoprint];
+}
+
+void drawBestoPath()
+{
+	int cont = 0;
+	while (cont != BestoPath.size()-2)
+	{
+		glBegin(GL_LINES);
+		glColor3d(1.000, 0.000, 0.000);
+		glVertex3d(BestoPath[cont].x, BestoPath[cont].y, 0);
+		glVertex3d(BestoPath[cont + 1].x, BestoPath[cont + 1].y, 0);
+		glEnd();
+		cont++;
+	}
+}
+
 void displayGizmo()
 {
 	glBegin(GL_LINES);
@@ -333,11 +417,8 @@ void glPaint(void) {
 	glLoadIdentity();
 
 	drawTSMCountries();
-	drawEdgesFromPrincipal();
 	drawTSMCountriesPrincipal();
-	//printPath(, p1, p2);
-	//drawPointsFromPath(, p1, p2);
-
+	drawBestoPath();
 	//dibuja el gizmo
 	displayGizmo();
 
@@ -374,8 +455,9 @@ GLvoid window_key(unsigned char key, int x, int y) {
 	case KEY_ESC:
 		exit(0);
 		break;
-
-	default:
+	case KEY_G:
+		Poblacion = geneticAlgorithm(Poblacion);
+		BestoPath = BestPath(Poblacion);
 		break;
 	}
 
@@ -398,15 +480,8 @@ int main(int argc, char** argv) {
 	getTenRandomCountries();
 
 	Poblacion = genRandomInicialPoblation();
-
-	string test = "";
-
-	while (test != "end")
-	{
-		Poblacion = geneticAlgorithm(Poblacion);
-		cout << "continuar?" << endl;
-		cin >> test;
-	}
+	Poblacion = geneticAlgorithm(Poblacion);
+	BestoPath = BestPath(Poblacion);
 
 	//Inicializacion de la GLUT
 	glutInit(&argc, argv);
