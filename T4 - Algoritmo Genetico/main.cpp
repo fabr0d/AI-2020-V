@@ -308,12 +308,16 @@ vector<vector<Point>> TournamentSelectionAndCrossing(vector<vector<Point>> pobla
 	while (poblacionFaltante != poblationX.size())
 	{
 		vector<int> pseudoPair = genRandomPair(poblacionFaltanteEstatica-1);
-		Result.push_back(
-			OXCrossover(
-				pseudoPair,
-				Result
-			)
-		);
+		vector<Point> newSon = OXCrossover(pseudoPair, Result);
+		//Mutacion aleatoria
+		if ((rand() % 2 + 1) % 2 == 0)
+		{
+			vector<int>RndPair = genRandomPair(munofpnts-1);
+			Point temporal = newSon[RndPair[1]];
+			newSon[RndPair[1]] = newSon[RndPair[0]];
+			newSon[RndPair[0]] = temporal;
+		}
+		Result.push_back(newSon);
 		poblacionFaltante++;
 		//cout << "poblacion añadida <<<<<<<<<<<<<<<" << endl;
 		//printPoblation(Result);
@@ -377,6 +381,7 @@ vector<Point> BestPath(vector<vector<Point>> pobla)
 			positoprint = PositionOfAPoblacion_and_Aptitude[i].first;
 		}
 	}
+	cout << "mejor camino de la generacion: "; printPath(pobla[positoprint]);
 	return pobla[positoprint];
 }
 
