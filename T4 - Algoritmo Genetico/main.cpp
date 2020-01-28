@@ -14,6 +14,7 @@
 #include <stdlib.h>     /* srand, rand */
 #define KEY_ESC 27
 #define KEY_G 71
+#define KEY_H 72
 using namespace std;
 
 class Point
@@ -143,7 +144,7 @@ void printPoint(Point Pnt)
 {
 	cout << "(" << Pnt.x << "," << Pnt.y << ")";
 }
-
+	
 void printPath(vector<Point> path)
 {
 	for (size_t i = 0; i < path.size(); i++)
@@ -382,21 +383,30 @@ vector<Point> BestPath(vector<vector<Point>> pobla)
 		}
 	}
 	cout << "mejor camino de la generacion: "; printPath(pobla[positoprint]);
+	BestoPath = pobla[positoprint];
 	return pobla[positoprint];
 }
 
 void drawBestoPath()
 {
-	int cont = 0;
-	while (cont != BestoPath.size()-2)
+	for (size_t i = 0; i < BestoPath.size()-1; i++)
 	{
 		glBegin(GL_LINES);
 		glColor3d(1.000, 0.000, 0.000);
-		glVertex3d(BestoPath[cont].x, BestoPath[cont].y, 0);
-		glVertex3d(BestoPath[cont + 1].x, BestoPath[cont + 1].y, 0);
+		glVertex3d(BestoPath[i].x, BestoPath[i].y, 0);
+		cout << "from:"; printPoint(BestoPath[i]);
+		glVertex3d(BestoPath[i + 1].x, BestoPath[i + 1].y, 0);
+		cout << " to: "; printPoint(BestoPath[i + 1]); cout << endl;
 		glEnd();
-		cont++;
 	}
+	glBegin(GL_LINES);
+	glColor3d(1.000, 0.000, 0.000);
+	glVertex3d(BestoPath[BestoPath.size() - 1].x, BestoPath[BestoPath.size() - 1].y, 0);
+	cout << "from:"; printPoint(BestoPath[BestoPath.size() - 1]);
+	glVertex3d(BestoPath[0].x, BestoPath[0].y, 0);
+	cout << " to: "; printPoint(BestoPath[0]); cout << endl;
+	cout << "/*/" << endl;
+	glEnd();
 }
 
 void displayGizmo()
@@ -424,6 +434,7 @@ void glPaint(void) {
 	drawTSMCountries();
 	drawTSMCountriesPrincipal();
 	drawBestoPath();
+
 	//dibuja el gizmo
 	displayGizmo();
 
@@ -449,7 +460,7 @@ GLvoid window_redraw(GLsizei width, GLsizei height)
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
+	//drawBestoPath();
 	glOrtho(-20.0, 120.0, -20.0, 120.0, -1.0, 1.0);
 	// todas la informaciones previas se aplican al la matrice del ModelView
 	glMatrixMode(GL_MODELVIEW);
@@ -464,6 +475,7 @@ GLvoid window_key(unsigned char key, int x, int y) {
 		Poblacion = geneticAlgorithm(Poblacion);
 		BestoPath = BestPath(Poblacion);
 		break;
+
 	}
 
 }
