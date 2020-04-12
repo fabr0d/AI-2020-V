@@ -293,12 +293,12 @@ vector<vector<Point>> TournamentSelectionAndCrossing(vector<vector<Point>> pobla
 		{
 			Result.push_back(poblationX[myvector[b]]);
 		}
-		a = a + 2;
-		b = b + 2;
+		a = (a + 2);
+		b = (b + 2);
 
 	}
-	cout << "Ganadores: " << endl;
-	printPoblation(Result);
+	//cout << "Ganadores: " << endl;
+	//printPoblation(Result);
 	cout << "Empezara el Crossing ..." << endl;
 	
 	//vector Result contiene el resultado de la seleccion por torneo
@@ -346,7 +346,7 @@ vector<vector<Point>> geneticAlgorithm(vector<vector<Point>> P)
 	media = media / PositionOfAPoblacion_and_Aptitude.size();
 	cout << "Min val finded : " << minval << endl;
 	cout << "Media val: " << media << endl;
-	printPoblation(P);
+	//printPoblation(P);
 
 	cout << "Empezara el Torneo para la seleccion y el cruzamiento ..." << endl;
 	vector<vector<Point>> NuevaPoblacion;
@@ -394,18 +394,18 @@ void drawBestoPath()
 		glBegin(GL_LINES);
 		glColor3d(1.000, 0.000, 0.000);
 		glVertex3d(BestoPath[i].x, BestoPath[i].y, 0);
-		cout << "from:"; printPoint(BestoPath[i]);
+		//cout << "from:"; printPoint(BestoPath[i]);
 		glVertex3d(BestoPath[i + 1].x, BestoPath[i + 1].y, 0);
-		cout << " to: "; printPoint(BestoPath[i + 1]); cout << endl;
+		//cout << " to: "; printPoint(BestoPath[i + 1]); cout << endl;
 		glEnd();
 	}
 	glBegin(GL_LINES);
 	glColor3d(1.000, 0.000, 0.000);
 	glVertex3d(BestoPath[BestoPath.size() - 1].x, BestoPath[BestoPath.size() - 1].y, 0);
-	cout << "from:"; printPoint(BestoPath[BestoPath.size() - 1]);
+	//cout << "from:"; printPoint(BestoPath[BestoPath.size() - 1]);
 	glVertex3d(BestoPath[0].x, BestoPath[0].y, 0);
-	cout << " to: "; printPoint(BestoPath[0]); cout << endl;
-	cout << "/*/" << endl;
+	//cout << " to: "; printPoint(BestoPath[0]); cout << endl;
+	//cout << "/*/" << endl;
 	glEnd();
 }
 
